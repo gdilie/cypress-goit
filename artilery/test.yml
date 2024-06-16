@@ -1,0 +1,33 @@
+config:
+  target: "http://httpbin.org/"
+  phases:
+    - duration: 20
+      arrivalRate: 2
+      name:
+    - duration: 20
+      arrivalRate: 2
+      name:
+    - duration: 5
+      arrivalRate: 100
+      name:
+    - duration: 20
+      arrivalRate: 2
+      name:
+  plugins:
+    ensure: {}
+  ensure:
+    thresholds:
+      - http.response_time.p95: 1000
+    conditions:
+      - expression: vusers.failed == 0
+
+scenarios:
+  - name: Post resource
+    flow:
+      - post:
+          url: "{{ target }}post"
+          json:
+            username: "test"
+            password: "password"
+      - get:
+          url: "{{ target }}get"
